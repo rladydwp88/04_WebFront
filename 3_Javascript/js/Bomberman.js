@@ -1,6 +1,5 @@
-// let bomb = document.querySelector("#bomb");
-// let boomm = document.querySelector("#boomm");
 let box = document.querySelector("#box");
+let bombs = [];
 
 document.addEventListener("keydown", function (e) {
   let move = document.querySelector("#bomberman");
@@ -19,20 +18,30 @@ document.addEventListener("keydown", function (e) {
     case 'ArrowLeft': 
       move.style.transform += "translateX(-10px)"; 
       break;
-    case 'x': bombInput(); break;
+    case 'x': bombInput(move); break;
     case 'z': boommFire(); break;
   }
 
 });
 
-bomb.style.display = "none";
-boomm.style.display = "none";
 
-// 봄버맨이 이동한 위치에서 폭탄이 생성
-function bombInput() {
-  box.innerHTML += `<img src="../../images/bomb.png">`;
+function bombInput(move) {
+  let rect = move.getBoundingClientRect();
+  let bombId = `bomb-${bombs.length}`;
+  let bombHTML = `<img id='${bombId}' src='../../images/bomb.png' style='position:absolute; left:${rect.right + 10}px; top:${rect.top}px;'>`;
+  box.innerHTML += bombHTML;
+  bombs.push(bombId);
 }
 
 function boommFire() {
-  box.innerHTML += `<img src="../../images/boomm.png">`;
+  bombs.forEach(bombId => {
+    let bomb = document.getElementById(bombId);
+    if (bomb) {
+      bomb.src = '../../images/boomm.png';
+      setTimeout(() => bomb.remove(), 500);
+    }
+  });
+  bombs = [];
 }
+
+
